@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "732761199347",
+    "project_id": "reminderapp-bf700",
+    "storage_bucket": "reminderapp-bf700.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732761199347:android:92396fd13f9bb7888b5d86",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732761199347-u8gvvdathd97dhnoa1aqq8kk3orgrmai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZsV9sDtxp1sKLdJV3kwYdV048CQvYfVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732761199347-u8gvvdathd97dhnoa1aqq8kk3orgrmai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
