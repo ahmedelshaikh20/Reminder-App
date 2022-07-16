@@ -1,10 +1,11 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: "androidx.navigation.safeargs.kotlin"
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'
-
+plugins {
+  id 'com.android.application'
+  id 'kotlin-android'
+  id 'kotlin-android-extensions'
+  id 'androidx.navigation.safeargs.kotlin'
+  id 'kotlin-kapt'
+  id 'com.google.gms.google-services'
+}
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion "29.0.2"
@@ -38,6 +39,19 @@ android {
     buildFeatures {
         dataBinding true
     }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  defaultConfig {
+
+    multiDexEnabled true
+  }
+  testOptions.unitTests {
+    includeAndroidResources = true
+    returnDefaultValues = true
+  }
+
 }
 
 dependencies {
@@ -58,7 +72,9 @@ dependencies {
     //Navigation dependencies
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
-    kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+  androidTestImplementation 'org.testng:testng:6.9.6'
+  kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
@@ -121,6 +137,18 @@ dependencies {
     //Maps & Geofencing
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+  implementation 'androidx.multidex:multidex:2.0.1'
+  androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+  testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2'
 
+  testImplementation "androidx.arch.core:core-testing:2.1.0"
 
-}
+  implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
+
+  /////////////////////
+  implementation 'com.google.firebase:firebase-auth-ktx'
+  implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+  testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
+  implementation platform('com.google.firebase:firebase-bom:29.3.1')
+  implementation 'com.google.firebase:firebase-analytics-ktx'}

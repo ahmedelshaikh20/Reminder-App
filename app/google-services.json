@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "732761199347",
-    "project_id": "reminderapp-bf700",
-    "storage_bucket": "reminderapp-bf700.appspot.com"
+    "project_number": "719491714078",
+    "project_id": "reminderapp-7b022",
+    "storage_bucket": "reminderapp-7b022.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:732761199347:android:92396fd13f9bb7888b5d86",
+        "mobilesdk_app_id": "1:719491714078:android:967dc9c2b3ff63df5ef20f",
         "android_client_info": {
           "package_name": "com.udacity.project4"
         }
       },
       "oauth_client": [
         {
-          "client_id": "732761199347-u8gvvdathd97dhnoa1aqq8kk3orgrmai.apps.googleusercontent.com",
+          "client_id": "719491714078-6q59vcklbv53vls8mnpdm9gc7jb496b8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCZsV9sDtxp1sKLdJV3kwYdV048CQvYfVA"
+          "current_key": "AIzaSyBtj_2wFRDfQI8CyAPS-oixANHalo57I6Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "732761199347-u8gvvdathd97dhnoa1aqq8kk3orgrmai.apps.googleusercontent.com",
+              "client_id": "719491714078-6q59vcklbv53vls8mnpdm9gc7jb496b8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

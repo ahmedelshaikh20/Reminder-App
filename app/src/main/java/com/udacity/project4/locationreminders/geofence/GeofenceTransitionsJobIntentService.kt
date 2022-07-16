@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
+import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
@@ -30,7 +31,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
                 GeofenceTransitionsJobIntentService::class.java, JOB_ID,
                 intent
             )
-          Log.d("GeofenceBroadcastReceiv" , "We are here in queue work")
+          Log.d("GeofenceBroadcastReceiv" , "We are here in enqueue work")
 
         }
     }
@@ -45,20 +46,22 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
     }
 
     private fun sendNotification(triggeringGeofences: List<Geofence>) {
-      Log.d("GeofenceBroadcastReceiv" , "We are here in queue work")
 
       for(geofenceEvent in triggeringGeofences){
         val requestId = geofenceEvent.requestId
+        Log.d("GeofenceBroadcastReceiv" , requestId.toString())
 
         //Get the local repository instance
-        val remindersLocalRepository: RemindersLocalRepository by inject()
+        val remindersLocalRepository: ReminderDataSource by inject()
 //        Interaction to the repository has to be through a coroutine scope
         CoroutineScope(coroutineContext).launch(SupervisorJob()) {
             //get the reminder with the request id
             val result = remindersLocalRepository.getReminder(requestId)
             if (result is Result.Success<ReminderDTO>) {
                 val reminderDTO = result.data
-                //send a notification to the user with the reminder details
+              Log.d("GeofenceBroadcastReceiv" , "Sent Notifcation is done")
+
+              //send a notification to the user with the reminder details
                 sendNotification(
                     this@GeofenceTransitionsJobIntentService, ReminderDataItem(
                         reminderDTO.title,
@@ -69,6 +72,8 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
                         reminderDTO.id
                     )
                 )
+              Log.d("GeofenceBroadcastReceiv" , "Sent Notifcation is done")
+
             }
         }}
     }

@@ -1,6 +1,7 @@
 package com.udacity.project4
 
 import android.app.Application
+import android.util.Log
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
@@ -15,7 +16,7 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        Log.d("MyApp" , "Yes ALL RIGHT ")
         /**
          * use Koin Library as a service locator
          */
@@ -35,9 +36,12 @@ class MyApp : Application() {
                     get() as ReminderDataSource
                 )
             }
-            single { RemindersLocalRepository(get()) as ReminderDataSource }
-            single { LocalDB.createRemindersDao(this@MyApp) }
+          single {
+            RemindersLocalRepository(get()) as ReminderDataSource
+          }
+          single { LocalDB.createRemindersDao(this@MyApp) }
         }
+
 
         startKoin {
             androidContext(this@MyApp)

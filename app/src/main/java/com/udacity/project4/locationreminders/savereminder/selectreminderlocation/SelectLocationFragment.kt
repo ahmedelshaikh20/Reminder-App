@@ -92,7 +92,10 @@ mMapView.getMapAsync(this)
       fusedLocationClient.lastLocation
         .addOnSuccessListener { newlocation: Location? ->
           Log.d("LOCATION", newlocation.toString())
-          var location = LatLng(newlocation!!.latitude, newlocation!!.longitude)
+          var location  =user_location
+          if (newlocation!!.longitude != null)
+            location = LatLng(newlocation!!.latitude, newlocation!!.longitude)
+
           it.resume(location)
         }
     }
@@ -100,7 +103,7 @@ mMapView.getMapAsync(this)
   private fun zoomInUserLocation() {
   if(!FineLoaction_BackgroundLoaction_Approved(requireActivity())){
     RequestLoactionPermission(requireActivity())
-    Log.d("We got location " , "PermissionRequested")
+    Log.d("We got location" , "PermissionRequested")
 
   }
 else {

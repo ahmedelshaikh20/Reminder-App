@@ -18,15 +18,15 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
       <Button
         android:id="@+id/Save_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-android:text="@string/save"
         android:backgroundTint="@color/design_default_color_background"
-        ></Button>
+        android:text="@string/save"></Button>
 
     </RelativeLayout>
 </layout>

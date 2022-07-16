@@ -22,7 +22,7 @@ import com.udacity.project4.utils.Action_GeoFence_Event
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-Log.d("GeofenceBroadcastReceiv" , "We are here")
+Log.d("GeofenceBroadcastReceiv" , "We are here in on Recieve")
       if(intent.action == Action_GeoFence_Event)
         GeofenceTransitionsJobIntentService.enqueueWork(context , intent)
 
