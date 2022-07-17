@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="Reminder Tiltle"
+            android:hint="@string/reminder_tiltle_hint"
           android:text="@{reminderDataItem.title}"
 android:textStyle="bold"
 
@@ -37,7 +37,7 @@ android:textStyle="bold"
         android:text="@{reminderDataItem.description}"
 
 
-        android:hint="Reminder Description">
+        android:hint="@string/reminder_description_hint">
       </TextView>
 
       <TextView
@@ -48,7 +48,7 @@ android:textStyle="bold"
         android:text="@{reminderDataItem.location}"
 
 
-        android:hint="Reminder Location">
+        android:hint="@string/reminder_location_hint">
       </TextView>
 
     </LinearLayout>

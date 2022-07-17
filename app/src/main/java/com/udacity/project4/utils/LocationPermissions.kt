@@ -11,11 +11,13 @@ const val Action_GeoFence_Event="Geofence";
 
  val REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE = 23
  val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE=24
+val REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE=25
+
  val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
   android.os.Build.VERSION_CODES.Q
 
  fun RequestLoactionPermission(activity: Activity) {
-  if(FineLoaction_BackgroundLoaction_Approved(activity)) return
+  if(Fine_BackgroundLoaction_Approved(activity)) return
   var permissionArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
   val result_code  = when {
     runningQOrLater -> {
@@ -33,11 +35,49 @@ const val Action_GeoFence_Event="Geofence";
 
 
 }
+fun RequestBackgroundLoactionPermission(activity: Activity) {
+  if(BackgroundLoaction_Approved(activity)) return
+  if(runningQOrLater) {
+    val permissionArray = arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 
-fun FineLoaction_BackgroundLoaction_Approved(activity: Activity):Boolean{
+    var result_code = REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+
+    ActivityCompat.requestPermissions(
+      activity,
+      permissionArray,
+      result_code
+    )
+
+  }
+}
+fun RequestFineLoactionPermission(activity: Activity) {
+  if(FineLoaction_Approved(activity)) return
+  var permissionArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+  var result_code = REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+
+  ActivityCompat.requestPermissions(
+    activity,
+    permissionArray,
+    result_code
+  )
+
+
+}
+
+
+fun FineLoaction_Approved(activity: Activity):Boolean{
   val foregroundLocationApproved = (
     PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(activity , Manifest.permission.ACCESS_FINE_LOCATION)
     )
+
+
+
+  return foregroundLocationApproved
+
+
+}
+fun BackgroundLoaction_Approved(activity: Activity):Boolean{
   val BackGroundLocationApproved = (
     if(runningQOrLater)
       PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(activity , Manifest.permission.ACCESS_BACKGROUND_LOCATION)
@@ -45,7 +85,24 @@ fun FineLoaction_BackgroundLoaction_Approved(activity: Activity):Boolean{
       true
     )
 
-  return foregroundLocationApproved && BackGroundLocationApproved;
+
+  return BackGroundLocationApproved
+
+
+}
+fun Fine_BackgroundLoaction_Approved(activity: Activity):Boolean{
+  val BackGroundLocationApproved = (
+    if(runningQOrLater)
+      PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(activity , Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    else
+      true
+    )
+  val foregroundLocationApproved = (
+    PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(activity , Manifest.permission.ACCESS_FINE_LOCATION)
+    )
+
+
+  return BackGroundLocationApproved && foregroundLocationApproved
 
 
 }

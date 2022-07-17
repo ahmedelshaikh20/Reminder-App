@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
@@ -76,7 +77,6 @@ class SelectLocationFragment : BaseFragment(),OnMapReadyCallback {
     mMapView.onResume()
 mMapView.getMapAsync(this)
 
-
 //    var mapFragment : SupportMapFragment?=null
 //    mapFragment = SupportMapFragment().findFragmentById(R.id.map) as SupportMapFragment?
 //    mapFragment?.getMapAsync(this)
@@ -84,6 +84,23 @@ mMapView.getMapAsync(this)
 
 
 
+  }
+  private fun setMapStyle(map: GoogleMap?) {
+    try {
+      // Customize the styling of the base map using a JSON object defined
+      // in a raw resource file.
+      val success = map?.setMapStyle(
+        MapStyleOptions.loadRawResourceStyle(
+          requireActivity(),
+          R.raw.map_style
+        )
+      )
+      if (success==false) {
+        Log.e("Maps Style", "Style parsing failed.")
+      }
+    }catch (e: Resources.NotFoundException) {
+      Log.e("Maps Style", "Can't find style. Error: ", e)
+    }
   }
   @SuppressLint("MissingPermission")
   private suspend fun getLastLocation(): LatLng {
@@ -101,8 +118,8 @@ mMapView.getMapAsync(this)
     }
   }
   private fun zoomInUserLocation() {
-  if(!FineLoaction_BackgroundLoaction_Approved(requireActivity())){
-    RequestLoactionPermission(requireActivity())
+  if(!FineLoaction_Approved(requireActivity())){
+    RequestFineLoactionPermission(requireActivity())
     Log.d("We got location" , "PermissionRequested")
 
   }
@@ -191,20 +208,23 @@ marker?.let {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        // TODO: Change the map type based on the user's selection.
-        R.id.normal_map -> {
-            true
-        }
-        R.id.hybrid_map -> {
-            true
-        }
-        R.id.satellite_map -> {
-            true
-        }
-        R.id.terrain_map -> {
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
+      R.id.normal_map -> {
+        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        true
+      }
+      R.id.hybrid_map -> {
+        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        true
+      }
+      R.id.satellite_map -> {
+        googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        true
+      }
+      R.id.terrain_map -> {
+        googleMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        true
+      }
+      else -> super.onOptionsItemSelected(item)
     }
 
   override fun onMapReady(p0: GoogleMap?) {
@@ -212,7 +232,9 @@ marker?.let {
       googleMap = p0
     }
 setPoiClick(googleMap)
+    setMapStyle(p0)
     zoomInUserLocation()
+
   }
   fun setOnMapLongClick(map:GoogleMap){
    setPoiClick(map)

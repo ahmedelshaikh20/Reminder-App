@@ -66,5 +66,18 @@ val reminder_from_repo = result_reminder_from_repo.data
 
 
   }}
+  @Test
+  fun Error_RepoSaveReminder(){
+    runBlocking {
+      // Given Reminder
+      val reminder = reminderRepo.getReminder("dummy") as Result.Error
+
+
+      assertThat(reminder.message  ,`is` ("Reminder not found!"))
+
+
+
+    }}
 
 }
+

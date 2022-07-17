@@ -25,10 +25,7 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
 import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.utils.Action_GeoFence_Event
-import com.udacity.project4.utils.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE
-import com.udacity.project4.utils.RequestLoactionPermission
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
+import com.udacity.project4.utils.*
 import org.koin.android.ext.android.inject
 
 class SaveReminderFragment : BaseFragment() {
@@ -83,12 +80,12 @@ class SaveReminderFragment : BaseFragment() {
         ReminderDataItem(title, description, location, latitude, longitude)
 
       if (_viewModel.validateEnteredData(reminderDataItem)) {
-        if (FineLoaction_BackgroundLoaction_Approved()){
+        if (BackgroundLoaction_Approved(requireActivity())){
+
 
           checkDeviceLocationSettingsAndStartGeofence(true)}
         else
-          RequestLoactionPermission(requireActivity())
-      }
+          RequestBackgroundLoactionPermission(requireActivity())      }
 
     }
   }
@@ -195,23 +192,9 @@ class SaveReminderFragment : BaseFragment() {
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if(resultCode == REQUEST_TURN_DEVICE_LOCATION_ON)
-      checkDeviceLocationSettingsAndStartGeofence(false)
+      checkDeviceLocationSettingsAndStartGeofence(true)
   }
-  fun FineLoaction_BackgroundLoaction_Approved():Boolean{
-    val foregroundLocationApproved = (
-      PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(requireActivity() , Manifest.permission.ACCESS_FINE_LOCATION)
-      )
-    val BackGroundLocationApproved = (
-      if(runningQOrLater)
-        PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(requireActivity() , Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-      else
-        true
-      )
 
-    return foregroundLocationApproved && BackGroundLocationApproved;
-
-
-  }
   companion object{
     private const val GEOFENCE_RADIUS_IN_METERS = 100f
     private const val REQUEST_TURN_DEVICE_LOCATION_ON =35

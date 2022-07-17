@@ -1,15 +1,20 @@
 package com.udacity.project4
 
+import android.app.Activity
 import android.app.Application
+import android.app.PendingIntent.getActivity
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.udacity.project4.locationreminders.RemindersActivity
@@ -22,6 +27,8 @@ import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -50,10 +57,7 @@ class RemindersActivityTest : AutoCloseKoinTest() {// Extended Koin Test - embed
   fun registerIdlingResource() {
     IdlingRegistry.getInstance().register(dataBindingIdlingResource)
   }
-  @After
-  fun unregisterIdlingResource() {
-    IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
-  }
+
     /**
      * As we use Koin as a Service Locator Library to develop our code, we'll also use Koin to test our code.
      * at this step we will initialize Koin related code to be able to use it in out testing.
@@ -90,23 +94,27 @@ class RemindersActivityTest : AutoCloseKoinTest() {// Extended Koin Test - embed
             repository.deleteAllReminders()
         }
     }
+  @After
+  fun unregisterIdlingResource() {
+    IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+  }
 
 
-//  @Test
-//  fun testReminderSavedToastMessage() {
-//    val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
-//    dataBindingIdlingResource.monitorActivity(activityScenario)
-//
-//    onView(withId(R.id.addReminderFAB)).perform(click())
-//
-//    onView(withId(R.id.reminderTitle)).perform(ViewActions.replaceText("Egypt"))
-//    onView(withId(R.id.reminderDescription)).perform(ViewActions.replaceText("Kairo"))
-//    onView(withId(R.id.selectLocation)).perform(click())
-//    onView(withId(R.id.Save_Button)).perform(click())
-//
-//    onView(withId(R.id.saveReminder)).perform(click())
-//
-//
-//    activityScenario.close()
-//  }
+ // I Got error here in line 107
+ // at androidx.test.core.app.ActivityScenario.launch(ActivityScenario.java:189)
+
+  @Test
+  fun testErrorEnterTitleSnackBar() {
+    val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+    dataBindingIdlingResource.monitorActivity(activityScenario)
+
+    onView(withId(R.id.addReminderFAB)).perform(click())
+    onView(withId(R.id.saveReminder)).perform(click())
+
+    val snackBarMessage = appContext.getString(R.string.err_enter_title)
+    onView(withText(snackBarMessage)).check(matches(isDisplayed()))
+
+    activityScenario.close()
+  }
+
 }
