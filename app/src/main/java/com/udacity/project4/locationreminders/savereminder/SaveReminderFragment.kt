@@ -53,6 +53,8 @@ class SaveReminderFragment : BaseFragment() {
     setDisplayHomeAsUpEnabled(true)
 
     binding.viewModel = _viewModel
+    if (BackgroundLoaction_Approved(requireActivity())){
+      RequestBackgroundLoactionPermission(requireActivity())}
     //////////////////////////////////////
     return binding.root
   }
@@ -67,6 +69,7 @@ class SaveReminderFragment : BaseFragment() {
         NavigationCommand.To(SaveReminderFragmentDirections.actionSaveReminderFragmentToSelectLocationFragment())
 
     }
+
 
     binding.saveReminder.setOnClickListener {
       val title = _viewModel.reminderTitle.value

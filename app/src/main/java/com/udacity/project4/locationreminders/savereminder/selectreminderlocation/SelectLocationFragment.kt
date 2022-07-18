@@ -16,8 +16,12 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.BuildConfig
@@ -25,11 +29,14 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.utils.FineLoaction_Approved
+import com.udacity.project4.utils.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE
+import com.udacity.project4.utils.RequestFineLoactionPermission
+import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import com.udacity.project4.utils.*
 
 
 class SelectLocationFragment : BaseFragment(),OnMapReadyCallback {
@@ -231,14 +238,20 @@ marker?.let {
     if (p0 != null) {
       googleMap = p0
     }
+    googleMap.setOnMapClickListener {
+      googleMap.clear()
+      marker = googleMap.addMarker(
+        MarkerOptions()
+          .position(it)
+          .title("loll")
+      ) }
 setPoiClick(googleMap)
     setMapStyle(p0)
     zoomInUserLocation()
 
+
   }
-  fun setOnMapLongClick(map:GoogleMap){
-   setPoiClick(map)
-  }
+
 
 
 }
