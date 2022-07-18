@@ -7,13 +7,24 @@ import com.udacity.project4.locationreminders.data.dto.Result
 class FakeDataSource : ReminderDataSource {
 
   var remindersData: ArrayList< ReminderDTO> = ArrayList()
+   var forceError : Boolean  = false
+
+  fun forceErr(){
+    forceError=true
+  }
+  fun ResetErr(){
+    forceError = false
+  }
 
     override suspend fun getReminders(): Result<List<ReminderDTO>> {
-      if(remindersData.isEmpty()!=true)
-      return Result.Success(remindersData.toList())
-      else
-        return Result.Error("List of reminders is empty")
-
+      return try {
+        if(forceError) {
+          throw Exception("Reminders not found")
+        }
+        Result.Success((remindersData))
+      } catch (ex: Exception) {
+        Result.Error(ex.localizedMessage)
+      }
     }
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
@@ -25,6 +36,10 @@ remindersData.add(reminder)
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
 for (reminder in remindersData){
+
+  if(forceError == true){
+    throw Exception("Reminders not found")
+  }
   if(reminder.id == id){
     return Result.Success(reminder)
   }

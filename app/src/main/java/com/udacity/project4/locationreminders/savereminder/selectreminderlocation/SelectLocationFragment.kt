@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,10 +30,7 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
-import com.udacity.project4.utils.FineLoaction_Approved
-import com.udacity.project4.utils.REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE
-import com.udacity.project4.utils.RequestFineLoactionPermission
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
+import com.udacity.project4.utils.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.coroutines.resume
@@ -126,7 +124,7 @@ mMapView.getMapAsync(this)
   }
   private fun zoomInUserLocation() {
   if(!FineLoaction_Approved(requireActivity())){
-    RequestFineLoactionPermission(requireActivity())
+    RequestFineLoactionPermission(this)
     Log.d("We got location" , "PermissionRequested")
 
   }
@@ -153,7 +151,6 @@ else {
   }
 
 
-
   override fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,
@@ -164,8 +161,8 @@ else {
     if (
       grantResults.isEmpty() ||
       grantResults[0] == PackageManager.PERMISSION_DENIED ||
-      (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE &&
-        grantResults[1] ==
+      (requestCode == REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE &&
+        grantResults[0] ==
         PackageManager.PERMISSION_DENIED))
     {
       Snackbar.make(
@@ -188,7 +185,7 @@ else {
 
 
   private fun onLocationSelected() {
-marker?.let {
+    marker?.let {
   _viewModel.reminderSelectedLocationStr.value = it.title
   _viewModel.latitude.value = it.position.latitude
   _viewModel.longitude.value = it.position.longitude
@@ -239,12 +236,19 @@ marker?.let {
       googleMap = p0
     }
     googleMap.setOnMapClickListener {
+
       googleMap.clear()
       marker = googleMap.addMarker(
         MarkerOptions()
           .position(it)
-          .title("loll")
-      ) }
+          .title(getString(R.string.dropped_pin))
+
+      )
+      marker.let {
+        it?.showInfoWindow()
+      }
+
+    }
 setPoiClick(googleMap)
     setMapStyle(p0)
     zoomInUserLocation()

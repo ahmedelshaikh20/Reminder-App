@@ -4,7 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
-
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn.requestPermissions
 
 
 const val Action_GeoFence_Event="Geofence";
@@ -35,29 +37,27 @@ val REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE=25
 
 
 }
-fun RequestBackgroundLoactionPermission(activity: Activity) {
-  if(BackgroundLoaction_Approved(activity)) return
+fun RequestBackgroundLoactionPermission(fragment: Fragment) {
+  if(BackgroundLoaction_Approved(fragment.requireActivity())) return
   if(runningQOrLater) {
     val permissionArray = arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 
     var result_code = REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 
-    ActivityCompat.requestPermissions(
-      activity,
+    fragment.requestPermissions(
       permissionArray,
       result_code
     )
 
   }
 }
-fun RequestFineLoactionPermission(activity: Activity) {
-  if(FineLoaction_Approved(activity)) return
+fun RequestFineLoactionPermission(fragment: Fragment) {
+  if(FineLoaction_Approved(fragment.requireActivity())) return
   var permissionArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
   var result_code = REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
 
-  ActivityCompat.requestPermissions(
-    activity,
+  fragment.requestPermissions(
     permissionArray,
     result_code
   )

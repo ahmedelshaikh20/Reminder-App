@@ -54,7 +54,7 @@ class SaveReminderFragment : BaseFragment() {
 
     binding.viewModel = _viewModel
     if (BackgroundLoaction_Approved(requireActivity())){
-      RequestBackgroundLoactionPermission(requireActivity())}
+      RequestBackgroundLoactionPermission(this)}
     //////////////////////////////////////
     return binding.root
   }
@@ -88,7 +88,7 @@ class SaveReminderFragment : BaseFragment() {
 
           checkDeviceLocationSettingsAndStartGeofence(true)}
         else
-          RequestBackgroundLoactionPermission(requireActivity())      }
+          RequestBackgroundLoactionPermission(this)      }
 
     }
   }
