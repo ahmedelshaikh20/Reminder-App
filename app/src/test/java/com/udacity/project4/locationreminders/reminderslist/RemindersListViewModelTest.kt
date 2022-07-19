@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.MainCoroutineRule
 import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -53,6 +54,25 @@ lateinit var fakeDataSource : FakeDataSource
     MatcherAssert.assertThat(reminderViewModel.showLoading.value, CoreMatchers.`is`(false))
 
 
+  }
+  @Test
+  fun testShouldReturnError () = runBlocking  {
+    fakeDataSource.forceErr()
+    fakeDataSource.saveReminder(
+      ReminderDTO(
+        "dummy",
+        "dummy",
+        "dummy",
+        77.00,
+        77.00)
+    )
+
+    reminderViewModel.loadReminders()
+
+    MatcherAssert.assertThat(
+      reminderViewModel.showSnackBar.value, CoreMatchers.`is`("Reminders not found")
+    )
+    fakeDataSource.ResetErr()
   }
 
 }
