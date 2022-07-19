@@ -9,10 +9,10 @@ class FakeDataSource : ReminderDataSource {
   var remindersData: ArrayList< ReminderDTO> = ArrayList()
    var forceError : Boolean  = false
 
-  fun forceErr(){
+  public fun forceErr(){
     forceError=true
   }
-  fun ResetErr(){
+  public fun ResetErr(){
     forceError = false
   }
 

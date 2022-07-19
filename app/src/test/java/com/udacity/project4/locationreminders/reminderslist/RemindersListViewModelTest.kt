@@ -29,7 +29,7 @@ import org.robolectric.annotation.Config
 @Config(sdk = [Build.VERSION_CODES.P])
 class RemindersListViewModelTest {
   lateinit var reminderViewModel: RemindersListViewModel
-
+lateinit var fakeDataSource : FakeDataSource
   // Executes each task synchronously using Architecture Components.
   @get:Rule
   var instantExecutorRule = InstantTaskExecutorRule()
@@ -38,8 +38,8 @@ class RemindersListViewModelTest {
   var mainCoroutineRule = MainCoroutineRule()
   init {
     stopKoin()
-    val FakeDataSource = FakeDataSource()
-    reminderViewModel = RemindersListViewModel(Application(), FakeDataSource)
+    fakeDataSource = FakeDataSource()
+    reminderViewModel = RemindersListViewModel(Application(), fakeDataSource)
   }
 
   @Test
@@ -48,8 +48,11 @@ class RemindersListViewModelTest {
     mainCoroutineRule.pauseDispatcher()
     reminderViewModel.loadReminders()
     MatcherAssert.assertThat(reminderViewModel.showLoading.value, CoreMatchers.`is`(true))
-
     mainCoroutineRule.resumeDispatcher()
+    fakeDataSource.forceErr()
+    MatcherAssert.assertThat(reminderViewModel.showLoading.value, CoreMatchers.`is`(false))
+
 
   }
+
 }

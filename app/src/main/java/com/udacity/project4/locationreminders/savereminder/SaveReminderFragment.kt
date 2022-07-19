@@ -188,19 +188,19 @@ class SaveReminderFragment : BaseFragment() {
           })
         }.show()
     }else
-      checkDeviceLocationSettingsAndStartGeofence(true)
-
+    startGeoFence()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if(resultCode == REQUEST_TURN_DEVICE_LOCATION_ON)
+    if(resultCode == REQUEST_TURN_DEVICE_LOCATION_ON){
       checkDeviceLocationSettingsAndStartGeofence(true)
+      startGeoFence()}
   }
 
   companion object{
     private const val GEOFENCE_RADIUS_IN_METERS = 100f
-    private const val REQUEST_TURN_DEVICE_LOCATION_ON =35
+    const val REQUEST_TURN_DEVICE_LOCATION_ON =35
 
   }
 }
