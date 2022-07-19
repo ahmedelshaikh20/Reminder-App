@@ -10,18 +10,16 @@ import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -52,6 +50,7 @@ class SelectLocationFragment : BaseFragment(),OnMapReadyCallback {
   private lateinit var mMapView: MapView
   private lateinit var googleMap: GoogleMap
   private var marker : Marker? = null
+  private lateinit var locationCallback: LocationCallback
 
 
 
@@ -74,6 +73,24 @@ class SelectLocationFragment : BaseFragment(),OnMapReadyCallback {
       binding.SaveButton.setOnClickListener {
         onLocationSelected()
       }
+               locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                super.onLocationResult(locationResult)
+
+                locationResult?.run {
+                    val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+
+
+                  googleMap.addMarker(
+                    MarkerOptions().position(latLng).title("Title").snippet("Marker Description")
+                  )
+                  val cameraPosition = CameraPosition.Builder().target(latLng).zoom(12f).build()
+
+                  googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+
+                }
+            }
+        }
 
         return binding.root
     }
@@ -118,10 +135,18 @@ mMapView.getMapAsync(this)
       fusedLocationClient.lastLocation
         .addOnSuccessListener { newlocation: Location? ->
           Log.d("LOCATION", newlocation.toString())
-          var  location = LatLng(newlocation!!.latitude, newlocation!!.longitude)
-       user_location=location
+          if(newlocation == null){
+            Toast.makeText(requireContext(), "Cannot get location.", Toast.LENGTH_SHORT).show()
+          }
 
-          it.resume(location)
+else {
+          var location = user_location
+            location = LatLng(newlocation.latitude, newlocation.longitude)
+
+          if(newlocation==null){
+            location = user_location
+          }
+          it.resume(location)}
         }
     }
   }
@@ -135,9 +160,16 @@ mMapView.getMapAsync(this)
     val locationSettingsResponseTask = settingsClient.checkLocationSettings(builder.build())
 
     locationSettingsResponseTask.addOnFailureListener { exception ->
-      if (exception is ResolvableApiException ) {
-        exception.startResolutionForResult(this.requireActivity(),
-          SaveReminderFragment.REQUEST_TURN_DEVICE_LOCATION_ON)
+      if (exception is ResolvableApiException && resolve) {
+        startIntentSenderForResult(
+                        exception.resolution.intentSender,
+                        SaveReminderFragment.REQUEST_TURN_DEVICE_LOCATION_ON,
+                        null,
+                        0,
+                        0,
+                        0,
+                        null)}
+        else {
         Snackbar.make(
           requireView(),
           R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
@@ -146,14 +178,7 @@ mMapView.getMapAsync(this)
         }.show()
 
       }
-      else {
-        Snackbar.make(
-          requireView(),
-          R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
-        ).setAction(android.R.string.ok) {
-          checkDeviceLocationSettings()
-        }.show()
-      }
+
     }
 
     locationSettingsResponseTask.addOnCompleteListener {
@@ -301,13 +326,27 @@ setPoiClick(googleMap)
 
 
   }
+  @SuppressLint("MissingPermission")
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if(requestCode == SaveReminderFragment.REQUEST_TURN_DEVICE_LOCATION_ON){
-      checkDeviceLocationSettings(true)
+    Log.d("APP_RES" , resultCode.toString())
+    if(resultCode == 0){
+         checkDeviceLocationSettings(false)
       }else
-        zoomInUserLocation_helper()
+    {
+      val locationRequest = LocationRequest.create().apply {
+        priority = LocationRequest.PRIORITY_LOW_POWER
+      }
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+      //zoomInUserLocation()
+    }
   }
+
+// ...
+
+    // ...
+
+
 
 
 

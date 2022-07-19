@@ -86,7 +86,9 @@ class SaveReminderFragment : BaseFragment() {
         if (BackgroundLoaction_Approved(requireActivity())){
 
 
-          checkDeviceLocationSettingsAndStartGeofence(true)}
+          checkDeviceLocationSettingsAndStartGeofence(true)
+
+        }
         else
           RequestBackgroundLoactionPermission(this)      }
 
