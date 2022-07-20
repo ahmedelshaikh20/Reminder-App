@@ -83,14 +83,16 @@ class SaveReminderFragment : BaseFragment() {
         ReminderDataItem(title, description, location, latitude, longitude)
 
       if (_viewModel.validateEnteredData(reminderDataItem)) {
-        if (BackgroundLoaction_Approved(requireActivity())){
+        if (BackgroundLoaction_Approved(requireActivity()) && FineLoaction_Approved(requireActivity())){
 
 
           checkDeviceLocationSettingsAndStartGeofence(true)
 
         }
         else
-          RequestBackgroundLoactionPermission(this)      }
+        {
+          RequestFineLoactionPermission(this)
+          RequestBackgroundLoactionPermission(this) }     }
 
     }
   }
@@ -187,8 +189,11 @@ class SaveReminderFragment : BaseFragment() {
             action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
             data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
           })
-        }.show()
+        }
+        .show()
+
     }else
     startGeoFence()
   }

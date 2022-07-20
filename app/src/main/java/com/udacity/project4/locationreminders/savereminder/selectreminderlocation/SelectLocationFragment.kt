@@ -172,8 +172,9 @@ else {
         else {
         Snackbar.make(
           requireView(),
-          R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
-        ).setAction(android.R.string.ok) {
+          R.string.location_required_error, Snackbar.LENGTH_SHORT
+        ).setDuration(3000)
+          .setAction(android.R.string.ok) {
           checkDeviceLocationSettings()
         }.show()
 
@@ -189,6 +190,7 @@ else {
     }
   }
 
+  @SuppressLint("MissingPermission")
   private fun zoomInUserLocation() {
   if(!FineLoaction_Approved(requireActivity())){
     RequestFineLoactionPermission(this)
@@ -197,6 +199,12 @@ else {
   }
 else {
 checkDeviceLocationSettings(true)
+    val locationRequest = LocationRequest.create().apply {
+      priority = LocationRequest.PRIORITY_LOW_POWER
+    }
+    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+    //zoomInUserLocation()
+    zoomInUserLocation_helper()
  }
 
 
