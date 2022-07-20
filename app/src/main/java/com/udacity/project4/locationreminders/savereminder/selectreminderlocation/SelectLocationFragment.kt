@@ -168,7 +168,10 @@ else {
                         0,
                         0,
                         0,
-                        null)}
+                        null)
+
+
+      }
         else {
         Snackbar.make(
           requireView(),
@@ -230,6 +233,7 @@ checkDeviceLocationSettings(true)
   }
 
 
+  @SuppressLint("MissingPermission")
   override fun onRequestPermissionsResult(
     requestCode: Int,
     permissions: Array<out String>,
@@ -256,8 +260,10 @@ checkDeviceLocationSettings(true)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
           })
         }.show()
-    }else
-      zoomInUserLocation()
+    }else{
+
+    googleMap.setMyLocationEnabled(true)
+      zoomInUserLocation()}
 
   }
 
@@ -310,6 +316,7 @@ checkDeviceLocationSettings(true)
       else -> super.onOptionsItemSelected(item)
     }
 
+  @SuppressLint("MissingPermission")
   override fun onMapReady(p0: GoogleMap?) {
     if (p0 != null) {
       googleMap = p0
@@ -340,14 +347,14 @@ setPoiClick(googleMap)
     Log.d("APP_RES" , resultCode.toString())
     if(resultCode == 0){
          checkDeviceLocationSettings(false)
-      }else
-    {
+      }
+
       val locationRequest = LocationRequest.create().apply {
         priority = LocationRequest.PRIORITY_LOW_POWER
       }
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
       //zoomInUserLocation()
-    }
+
   }
 
 // ...

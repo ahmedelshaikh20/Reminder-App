@@ -18,8 +18,8 @@ val REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE=25
  val runningQOrLater = android.os.Build.VERSION.SDK_INT >=
   android.os.Build.VERSION_CODES.Q
 
- fun RequestLoactionPermission(activity: Activity) {
-  if(Fine_BackgroundLoaction_Approved(activity)) return
+ fun RequestLoactionPermission(fragment: Fragment) {
+  if(Fine_BackgroundLoaction_Approved(fragment.requireActivity())) return
   var permissionArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
   val result_code  = when {
     runningQOrLater -> {
@@ -29,8 +29,8 @@ val REQUEST_BACKGROUND_ONLY_PERMISSIONS_REQUEST_CODE=25
     else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
   }
 
-  ActivityCompat.requestPermissions(
-    activity,
+  fragment.requestPermissions(
+
     permissionArray,
     result_code
   )

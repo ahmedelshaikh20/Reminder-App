@@ -53,8 +53,9 @@ class SaveReminderFragment : BaseFragment() {
     setDisplayHomeAsUpEnabled(true)
 
     binding.viewModel = _viewModel
-    if (BackgroundLoaction_Approved(requireActivity())){
-      RequestBackgroundLoactionPermission(this)}
+    if (Fine_BackgroundLoaction_Approved(requireActivity())){
+      RequestLoactionPermission(this)
+    }
     //////////////////////////////////////
     return binding.root
   }
@@ -85,14 +86,13 @@ class SaveReminderFragment : BaseFragment() {
       if (_viewModel.validateEnteredData(reminderDataItem)) {
         if (BackgroundLoaction_Approved(requireActivity()) && FineLoaction_Approved(requireActivity())){
 
+          checkDeviceLocationSettingsAndStartGeofence()
 
-          checkDeviceLocationSettingsAndStartGeofence(true)
 
         }
         else
         {
-          RequestFineLoactionPermission(this)
-          RequestBackgroundLoactionPermission(this) }     }
+          RequestLoactionPermission(this) }     }
 
     }
   }
@@ -110,8 +110,14 @@ class SaveReminderFragment : BaseFragment() {
 
     locationSettingsResponseTask.addOnFailureListener { exception ->
       if (exception is ResolvableApiException && resolve) {
-        exception.startResolutionForResult(this.requireActivity(),
-          REQUEST_TURN_DEVICE_LOCATION_ON)
+        startIntentSenderForResult(
+          exception.resolution.intentSender,
+          SaveReminderFragment.REQUEST_TURN_DEVICE_LOCATION_ON,
+          null,
+          0,
+          0,
+          0,
+          null)
 
 
       }
@@ -195,14 +201,14 @@ class SaveReminderFragment : BaseFragment() {
         .show()
 
     }else
-    startGeoFence()
+    checkDeviceLocationSettingsAndStartGeofence()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if(resultCode == REQUEST_TURN_DEVICE_LOCATION_ON){
-      checkDeviceLocationSettingsAndStartGeofence(true)
-      startGeoFence()}
+    if (requestCode == REQUEST_TURN_DEVICE_LOCATION_ON) {
+      checkDeviceLocationSettingsAndStartGeofence(false)
+    }
   }
 
   companion object{
